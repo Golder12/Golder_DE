@@ -1,0 +1,93 @@
+-- implicit inner join 
+SELECT "VendorID",
+		tpep_pickup_datetime, 
+		tpep_dropoff_datetime, 
+		passenger_count, 
+		payment_type,
+		fare_amount, 
+		tip_amount, 
+		CONCAT(zpu."Borough", ' / ', zpu."Zone") as PickupZone, 
+		CONCAT(zpu."Borough", ' / ', zdo."Zone") as DropoffZone
+	FROM public.yellow_taxi_trips t,
+	zones zpu,
+	zones zdo
+	where t."PULocationID" = zpu."LocationID" and
+	t."DOLocationID" = zdo."LocationID"
+	limit 5;
+
+
+-- explicit inner join
+SELECT "VendorID",
+		tpep_pickup_datetime, 
+		tpep_dropoff_datetime, 
+		passenger_count, 
+		payment_type,
+		fare_amount, 
+		tip_amount, 
+		CONCAT(zpu."Borough", ' / ', zpu."Zone") as PickupZone, 
+		CONCAT(zpu."Borough", ' / ', zdo."Zone") as DropoffZone
+	FROM public.yellow_taxi_trips t join 
+	zones zpu on t."PULocationID" = zpu."LocationID"
+	join zones zdo
+	on t."DOLocationID" = zdo."LocationID"
+	limit 5;
+
+-- check if any of the trips doesn't have a pick up id or drop off id
+SELECT "VendorID",
+		tpep_pickup_datetime, 
+		tpep_dropoff_datetime, 
+		"PULocationID",
+		"DOLocationID"
+FROM yellow_taxi_trips t
+where "PULocationID" is NULL
+OR "DOLocationID" is NULL
+limit 5;
+
+--check if any of the pick up or drop off locations in yellow trips data is not in zones table
+SELECT "VendorID",
+		tpep_pickup_datetime, 
+		tpep_dropoff_datetime, 
+		"PULocationID",
+		"DOLocationID"
+FROM yellow_taxi_trips t
+where "DOLocationID" NOT IN (Select "LocationID" from zones)
+limit 5;
+
+--left join(if records present in table in left not present in table on right, show them)
+SELECT "VendorID",
+		tpep_pickup_datetime, 
+		tpep_dropoff_datetime, 
+		passenger_count, 
+		payment_type,
+		fare_amount, 
+		tip_amount, 
+		CONCAT(zpu."Borough", ' / ', zpu."Zone") as PickupZone, 
+		CONCAT(zpu."Borough", ' / ', zdo."Zone") as DropoffZone
+	FROM public.yellow_taxi_trips t left join 
+	zones zpu on t."PULocationID" = zpu."LocationID"
+	left join zones zdo
+	on t."DOLocationID" = zdo."LocationID"
+	limit 10;
+
+--remove time and leave only the day(still shows timestamp as all zeros though)
+SELECT "VendorID",
+		tpep_pickup_datetime, 
+		tpep_dropoff_datetime, 
+		DATE_TRUNC('DAY',tpep_dropoff_datetime)
+	FROM public.yellow_taxi_trips t 
+	limit 10;
+
+--removes time and actually leaves only the day
+SELECT "VendorID",
+		tpep_pickup_datetime, 
+		tpep_dropoff_datetime, 
+		CAST(tpep_dropoff_datetime as DATE)
+	FROM public.yellow_taxi_trips t 
+	limit 10;
+	
+	
+
+		
+		
+
+

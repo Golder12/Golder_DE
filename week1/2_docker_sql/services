@@ -1,8 +1,11 @@
+pgcli -h localhost -p 5432 -u root -d ny_taxi
+
+
 docker run -it \
  -e POSTGRES_USER="root" \
  -e POSTGRES_PASSWORD="root" \
  -e POSTGRES_DB="ny_taxi" \
- -v /workspaces/GolderZoomcamp/my_trial/week_1/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
+ -v /week_1/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
  -p 5432:5432 \
  postgres:13
 
@@ -20,10 +23,10 @@ docker run -it \
  -e POSTGRES_USER="root" \
  -e POSTGRES_PASSWORD="root" \
  -e POSTGRES_DB="ny_taxi" \
- -v /workspaces/GolderZoomcamp/my_trial/week_1/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
+ -v /week_1/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
  -p 5432:5432 \
  --network=pg-network \
- --name=pg-database3 \
+ --name=pg-database15 \
  postgres:13
 
 docker run -it \
@@ -35,7 +38,8 @@ docker run -it \
 
 #ingestion script
 
-URL="https://drive.google.com/file/d/1SCbYpdteeu0nzd0_64_-u72o-Ng4ADzr/view?usp=sharing"
+#URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-09.csv.gz"
 
 python ingest_data.py \
     --user=root \
@@ -43,7 +47,7 @@ python ingest_data.py \
     --host=localhost \
     --port=5432 \
     --db=ny_taxi \
-    --table_name=yellow_taxi_trips
+    --table_name=green_taxi_trips \
     --url=${URL}
 
 #dockerizing the ingestion script
@@ -55,8 +59,8 @@ docker run -it \
     taxi_ingest:v001 \
         --user=root \
         --password=root\
-        --host=pg-database5 \
+        --host=pg-database15 \
         --port=5432 \
         --db=ny_taxi \
-        --table_name=yellow_taxi_trips 
+        --table_name=yellow_taxi_trips \
         --url=${URL}

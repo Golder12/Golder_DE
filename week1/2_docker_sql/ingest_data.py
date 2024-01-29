@@ -3,6 +3,7 @@ from time import time
 from sqlalchemy import create_engine
 import argparse
 import os
+import gzip
 
 def main(params):
     user = params.user
@@ -15,7 +16,16 @@ def main(params):
 
     csv_name = 'output.csv'
 
-    os.system(f"wget {url} -O {csv_name}")
+    os.system(f"wget {url} -O {csv_name}.gz")
+
+    # Unzip the compressed file
+    with gzip.open(f"{csv_name}.gz", 'rb') as f_in:
+    # Read the uncompressed data
+        uncompressed_data = f_in.read()
+
+    # Write the uncompressed data to the output CSV file
+    with open(csv_name, 'wb') as f_out:
+        f_out.write(uncompressed_data)
 
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
 
@@ -23,8 +33,8 @@ def main(params):
 
     df = next(df_iter)
 
-    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+    df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
 
     df.head(n=0).to_sql(name=table_name,con=engine, if_exists='replace')
 
@@ -35,10 +45,10 @@ def main(params):
         t_start = time()
         df = next(df_iter)
 
-        df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-        df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+        df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+        df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
     
-        df.to_sql(name='yellow_taxi_trips',con=engine,if_exists='append')
+        df.to_sql(name='green_taxi_trips',con=engine,if_exists='append')
 
         t_end = time()
         print("inserted another chunk...took %.3f second" % (t_end - t_start))
