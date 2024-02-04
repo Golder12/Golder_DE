@@ -1,9 +1,0 @@
-what is terraform?
-- open source tool for provisioning infrastructure resources
-- supports devops best practices for change management
-
-advantages:
-- infrastructure lifecycle management
-- version control commits
-- very useful for stack-based deployments, and with cloud providers such as AWS, GCP ..
-- state based approach to track resource changes throughout deployments

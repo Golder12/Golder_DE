@@ -1,0 +1,50 @@
+what is orchestration
+
+MAKING ORCHESTRATION MAGICAL WITH MAGE
+
+WHAT WE WILL BUILD
+mage and postgres are going to be running in a docker container. 
+we're going to take a dataset, do some transformations on it, load it into postgres,
+then do some more transformation.
+
+Architecture
+Extract
+- Pull data from a source (API)
+
+Transform
+- Data cleaning, transformation and partitioning
+
+Load
+API to Mage, Mage to Postgres, GCS, BigQuery
+
+WHAT IS ORCHESTRATION?
+Process of dependency management, facilitated through automation.
+Data orchestrator manages scheduling, triggering, monitoring and
+even resource allocation
+
+every workflow requires sequential steps.
+steps=tasks
+workflows=DAGs
+
+A GOOD ORCHESTRATOR HANDLES ...
+- workflow management
+- automation
+- error handling
+- recovery
+- monitoring and handling
+- resource optimization
+- observability
+- debugging
+- compliance/auditing
+
+A GOOD ORHESTRATOR PRIORITIZES...
+The developer experience
+- flow state
+"I need to switch between 7 tools/services"
+
+- Feedback loops
+"I spent 5 hours locally testing this DAG"
+
+- Cognitive load
+"How much do you need to know to do your job?"
+
